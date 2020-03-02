@@ -1,0 +1,12 @@
+acs-*.bib
+*Notes.bib
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.pdf
+*.synctex.gz
+
+Figures/*.png
+Figures/__pycache__
