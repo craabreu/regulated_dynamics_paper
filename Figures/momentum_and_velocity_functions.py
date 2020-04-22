@@ -35,7 +35,7 @@ def plot_momentum_distribution(index, x, alpha):
         ax[index].fill_between(x, 0, density(n)(x), color=color, alpha=opacity)
     ax[index].plot(x, np.exp(-x**2/2)/np.sqrt(2*math.pi), 'k-', label='normal')
     ax[index].fill_between(x, 0, np.exp(-x**2/2)/np.sqrt(2*math.pi), color='k', alpha=opacity)
-    # ax[index].set_ylim([0, 0.42])
+    ax[index].set_ylim([0, 0.42])
     ax[index].legend(loc='upper left')
 
 def plot_velocity_distribution(index, xinp, alpha):
@@ -63,53 +63,54 @@ def plot_velocity_distribution(index, xinp, alpha):
     ax[index].legend(loc='upper center')
 
 
-fig, axes = plt.subplots(3, 2, figsize=(7, 7), sharey='row',
-                         gridspec_kw={'height_ratios': [1, 1, 1.3]})
-ax = axes.flatten()
-fig.subplots_adjust(hspace=0.35,wspace=0.1)
+fig, ax = plt.subplots(3, 1, figsize=(3.4, 7), gridspec_kw={'height_ratios': [1, 1, 1.3]})
+fig.subplots_adjust(hspace=0.35)
+ax = ax.flatten()
 
-limit = 3.5
-x = np.linspace(-limit, limit, 200)
-for k in range(4):
-    ax[k].set_xlim([-limit, limit])
-
-plot_momentum_distribution(0, x, lambda n:1)
-plot_momentum_distribution(1, x, lambda n:(n+1)/n)
-# plot_momentum_distribution(1, x, lambda n:(n+0.56)/n)
-plot_velocity(2, x, lambda n:1)
-plot_velocity(3, x, lambda n:(n+1)/n)
-# plot_velocity(3, x, lambda n:n/(n+1))
-
-ax[2].set_ylim([-3, 3])
-ax[0].set_ylabel('Probability Density')
-ax[2].set_ylabel('Reduced Velocity $\\left(\\frac{v_i}{\\sqrt{kT/m_i}}\\right)$')
-for k in range(4):
-    ax[k].set_xlabel('Reduced Momentum $\\left(\\frac{p_i}{\\sqrt{m_i k T}}\\right)$')
-
-limit = 2.5
-x = np.linspace(-limit, limit, 400)
-ax[4].set_xlim([-limit, limit])
-ax[5].set_xlim([-limit, limit])
-
-ax[4].set_xlabel('Reduced Velocity $\\left(\\frac{v_i}{\\sqrt{kT/m_i}}\\right)$')
-ax[5].set_xlabel('Reduced Velocity $\\left(\\frac{v_i}{\\sqrt{kT/m_i}}\\right)$')
-ax[4].set_ylabel('Probability Density')
-
-plot_velocity_distribution(4, x, lambda n:1)
-plot_velocity_distribution(5, x, lambda n:(n+1)/n)
-# plot_velocity_distribution(5, x, lambda n:(n+0.56)/n)
-
-kwargs = dict(
+annotate_args = dict(
     xycoords='axes fraction',
     horizontalalignment='center',
     verticalalignment='center',
+    fontsize=12,
 )
-for k in range(2):
-    ax[2*k].annotate('$\\alpha_n = 1$', xy=(0.5, 0.2), **kwargs)
-    ax[2*k+1].annotate('$\\alpha_n = \\displaystyle{\\frac{n+1}{n}}$', xy=(0.5, 0.2), **kwargs)
-ax[4].annotate('$\\alpha_n = 1$', xy=(0.5, 0.15), **kwargs)
-ax[5].annotate('$\\alpha_n = \\displaystyle{\\frac{n+1}{n}}$', xy=(0.5, 0.15), **kwargs)
+
+limit = 3.5
+x = np.linspace(-limit, limit, 200)
+plot_momentum_distribution(0, x, lambda n:1)
+ax[0].set_xlim([-limit, limit])
+ax[0].set_xlabel('Reduced Momentum $\\left(\\frac{p_i}{\\sqrt{m_i k T}}\\right)$')
+ax[0].set_ylabel('Probability Density')
+ax[0].annotate('(a)', xy=(0.9, 0.85), **annotate_args)
+
+limit = 3.5
+x = np.linspace(-limit, limit, 200)
+plot_velocity(1, x, lambda n:1)
+ax[1].set_xlim([-limit, limit])
+ax[1].set_xlabel('Reduced Momentum $\\left(\\frac{p_i}{\\sqrt{m_i k T}}\\right)$')
+ax[1].set_ylabel('Reduced Velocity $\\left(\\frac{v_i}{\\sqrt{kT/m_i}}\\right)$')
+ax[1].set_ylim([-2.5, 2.5])
+ax[1].annotate('(b)', xy=(0.9, 0.15), **annotate_args)
+
+limit = 2.5
+x = np.linspace(-limit, limit, 400)
+plot_velocity_distribution(2, x, lambda n:1)
+ax[2].set_xlim([-limit, limit])
+ax[2].set_xlabel('Reduced Velocity $\\left(\\frac{v_i}{\\sqrt{kT/m_i}}\\right)$')
+ax[2].set_ylabel('Probability Density')
+ax[2].annotate('(c)', xy=(0.9, 0.85), **annotate_args)
 
 fig.savefig('momentum_and_velocity_functions')
+
+fig, ax = plt.subplots(1, 1, figsize=(3.4, 1.8))
+ax = [ax]
+limit = 3.5
+x = np.linspace(-limit, limit, 200)
+plot_velocity(0, x, lambda n:(n+1)/n)
+ax[0].set_xlim([-limit, limit])
+ax[0].set_xlabel('Reduced Momentum $\\left(\\frac{p_i}{\\sqrt{m_i k T}}\\right)$')
+ax[0].set_ylabel('Reduced Velocity $\\left(\\frac{v_i^\\mathrm{eq}}{\\sqrt{kT/m_i}}\\right)$')
+ax[0].set_ylim([-2.5, 2.5])
+
+fig.savefig('alternative_velocity_functions')
 
 plt.show()
